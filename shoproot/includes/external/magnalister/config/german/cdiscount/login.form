@@ -1,0 +1,11 @@
+{
+	"login": {
+		"headline": "Octopia Seller ID",
+		"fields": [ {
+			"label": "SellerId",
+			"desc": "Um die Verbindung zwischen Ihrem Octopia-Verkäuferkonto und dem Plugin herzustellen, müssen Sie uns als Aggregator autorisieren.<br/><br/>\n\n👉 Klicken Sie dazu auf folgenden Link und folgen Sie den Anweisungen:<br/>\n<a href=\"https://developer.octopia-io.net/api-credentials/#linkAgreeToSeller\" target=\"_blank\">Octopia API-Zugang einrichten</a><br/><br/>\n\nWählen Sie dort „magnalister“ als Aggregator aus.<br/>\nEine detaillierte Schritt-für-Schritt-Anleitung finden Sie hier:<br/>\n📄 <a href=\"https://otrs.magnalister.com/otrs/public.pl?Action=PublicFAQZoom;ItemID=2009\" target=\"_blank\">Octopia – Aggregator (magnalister) Zugriff über REST API gewähren</a>",
+			"key": "_#_platform_#_.sellerid",
+			"type": "text"
+		}]
+	}
+}

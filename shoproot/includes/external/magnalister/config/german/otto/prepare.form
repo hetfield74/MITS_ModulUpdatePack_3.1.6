@@ -1,0 +1,75 @@
+{
+    "prepare": {
+        "headline": "Artikelvorbereitung",
+        "fields": {
+            "lang": {
+                "label": "Sprache",
+                "key": "_#_platform_#_.lang",
+                "type": "selection",
+                "values": null
+            },
+            "vat": {
+                "label": "VAT",
+                "desc": "Sie m&uuml;ssen mindestens eine VAT im Shopsystem definiert haben.",
+                "morefields": {
+                    "vat": {
+                        "type": "extern",
+                        "skipRadio": true,
+                        "procFunc": "OttoConfigure::productVATConfig",
+                        "params": {
+                            "subfields": {
+                                "name": {
+                                    "label": "<strong>Shop-Steuerklassen</strong>",
+                                    "key": "otto.product.vat.name",
+                                    "type": "text",
+                                    "cssClasses": [
+                                        "autoWidth"
+                                    ]
+                                },
+                                "percent": {
+                                    "label": "<strong>OTTO-Steuer-Codes</strong>",
+                                    "key": "otto.product.vat",
+                                    "type": "selection",
+                                    "cssClasses": [
+                                        "fullWidth"
+                                    ],
+                                    "values": {
+                                        "": "Bitte w&auml;hlen",
+                                        "FULL": "Regelsteuersatz",
+                                        "REDUCED": "erm&auml;&szlig;igter Mehrwertsteuersatz"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delivery": {
+                "label": "Versand",
+                "morefields": {
+                    "delivery.shippingprofile": {
+                        "label": "Lieferzeit in Tagen",
+                        "key": "_#_platform_#_.delivery.shippingprofile",
+                        "desc": "Wenn „Aus Versandprofil übernehmen“ ausgewählt ist, wird die Standardbearbeitungszeit aus dem Versandprofil verwendet. Andernfalls wird diese überschrieben und bleibt unverändert, selbst wenn das Versandprofil geändert wird.",
+                        "type": "selection"
+                    },
+                    "delivery.processingtime": {
+                        "label": "Bearbeitungszeit in Tagen",
+                        "key": "_#_platform_#_.delivery.processingtime",
+                        "desc": "Die Bearbeitungszeit gibt an, wie lange der Händler benötigt, um eine Bestellung für den Versand vorzubereiten.<br><br>Hinweis: Die Bearbeitungszeit wird in „Arbeitstagen“ angegeben. Sie beschreibt die Zeit von der Auftragsfreigabe bis zur Übergabe an den Versanddienstleister. Eine „1“ gilt bis zur Cut-Off-Zeit als taggleicher Versand (0 Tage).",
+                        "type": "selection"
+                    }
+                }
+            },
+            "manufacturerfilter": {
+                "label": "Herstellerfilter",
+                "key": "_#_platform_#_.filter.manufacturer",
+                "type": "multicheckbox",
+                "desc": "Alle hier markierten Hersteller werden bei der Produkt-Vorbereitung nicht mit angezeigt.",
+                "default": [
+                ],
+                "expertsetting": true
+            }
+        }
+    }
+}

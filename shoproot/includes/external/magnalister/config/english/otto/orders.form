@@ -1,0 +1,455 @@
+{
+   "order": {
+        "headline": "Bestellungen",
+        "fields": {
+            "ordersimportactive": {
+                "label": "Import aktivieren",
+                "key": "_#_platform_#_.import",
+                "desc": "Sollen Bestellungen aus OTTO importiert werden?<br /><br />Wenn die Funktion aktiviert ist, werden Bestellungen voreingestellt st&uuml;ndlich importiert.<br /><br />Einen manuellen Import k&ouml;nnen Sie ansto&szlig;en, indem Sie den entsprechenden Funktionsbutton Bestellungen importieren oben rechts im magnalister Plugin anklicken.<br /><br />Zus&auml;tzlich k&ouml;nnen Sie den Bestellimport (ab Tarif Flat - maximal viertelst&uuml;ndlich) auch durch einen eigenen CronJob ansto&szlig;en, indem Sie folgenden Link zu Ihrem Shop aufrufen:<br /><br />Eigene CronJob-Aufrufe durch Kunden, die nicht im Tarif Flat sind, oder die h&auml;ufiger als viertelst&uuml;ndlich laufen, werden geblockt.",
+                "type": "radio",
+                "default": "true",
+                "values": {
+                    "true": "Ja",
+                    "false": "Nein"
+                },
+                "submit": "Orders.Import",
+                "cssClasses": [
+                    "orderConfig"
+                ],
+                "morefields": {
+                    "orders.import.start": {
+                        "label": "erstmalig ab Zeitpunkt",
+                        "desc": "Startzeitpunkt, ab dem die Bestellungen erstmalig importiert werden sollen. Bitte beachten Sie, dass dies nicht beliebig weit in die Vergangenheit m&ouml;glich ist, da die Daten bei OTTO h&ouml;chstens einige Wochen lang vorliegen.",
+                        "key": "_#_platform_#_.preimport.start",
+                        "type": "date",
+                        "submit": "Orders.Import.Start",
+                        "cssClasses": [
+                            "autoWidth"
+                        ]
+                    }
+                }
+            },
+            "orders.vat": {
+                "label": "MwSt. Shop-fremder Artikel",
+                "desc": "Wenn beim Bestellimport die Artikelnummer eines Kaufs im Web-Shop nicht erkannt wird, kann die Mehrwertsteuer nicht berechnet werden.<br />Als L&ouml;sung wird der hier angegebene Wert in Prozent bei allen Produkten hinterlegt, deren Mehrwertsteuersatz beim Bestellimport aus OTTO nicht bekannt ist.",
+                "morefields": {
+                    "orders.vat": {
+                        "key": "_#_platform_#_.mwst.fallback",
+                        "type": "text",
+                        "default": "0.00",
+                       "cssClasses": [
+                            "orderConfig"
+                        ]
+                    }
+                }
+
+            },
+            "customersgroup": {
+                "label": "Kundengruppe",
+                "desc": "Kundengruppe, zu der Kunden bei neuen Bestellungen zugeordnet werden sollen.",
+                "key": "_#_platform_#_.CustomerGroup",
+                "type": "selection",
+                "values": null,
+                "default": "2",
+                "cssClasses": [
+                    "orderConfig"
+                ]
+            },
+            "orders.status.processable": {
+                "label": "Webshop-Status f&uuml;r “offene” Bestellungen",
+                "desc": "<p>Der OTTO Bestellstatus “offen” bedeutet, dass der K&auml;ufer die Ware bereits bezahlt hat. Sie kann also risikofrei versendet werden.</p><p>W&auml;hlen Sie hier den entsprechenden Webshop-Bestellstatus, den eine importierte OTTO Bestellung mit dem Status “offen” erhalten soll.</p>",
+                "key": "_#_platform_#_.orders.status.processable",
+                "type": "selection",
+                "values": null,
+                "cssClasses": [
+                    "orderConfig"
+                ]
+            },
+            "orders.shipping.service": {
+                "label": "Versandart der Bestellungen",
+                "desc": "Versandart, die allen OTTO-Bestellungen zugeordnet wird. Standard: 'OTTO'.<br><br>Diese Einstellung ist wichtig f&uuml;r den Rechnungs- und Lieferscheindruck und f&uuml;r die nachtr&auml;gliche Bearbeitung der Bestellung im Shop sowie einige Warenwirtschaften.",
+                "key": "_#_platform_#_.orderimport.shippingmethod",
+                "type": "selection",
+                "values":{
+                   "textfield":"Aus Textfeld"
+                },
+                "default":"textfield",
+                "expertsetting":true,
+                "morefields":{
+                   "quantity":{
+                      "key":"_#_platform_#_.orderimport.shippingmethod.name",
+                      "type":"text",
+                      "default":"marketplace",
+                      "cssClasses":[
+                         "autoWidth",
+                         "orderConfig"
+                      ]
+                   }
+                },
+                "cssClasses": [
+                    "orderConfig"
+                ]
+            },
+            "orders.payment.methods": {
+                "label": "Zahlart der Bestellungen",
+                "desc": "Zahlart, die allen OTTO-Bestellungen zugeordnet wird. Standard: 'OTTO'.<br /><br />Diese Einstellung ist wichtig f&uuml;r den Rechnungs- und Lieferscheindruck und f&uuml;r die nachtr&auml;gliche Bearbeitung der Bestellung im Shop sowie einige Warenwirtschaften.",
+                "key": "_#_platform_#_.orderimport.payment.methods",
+                "type": "selection",
+                "values":{
+                   "textfield":"Aus Textfeld"
+                },
+                "default":"textfield",
+                "expertsetting":true,
+                "morefields":{
+                   "quantity":{
+                      "key":"_#_platform_#_.orderimport.paymentmethod.name",
+                      "type":"text",
+                      "default":"marketplace",
+                      "cssClasses":[
+                         "autoWidth",
+                         "orderConfig"
+                      ]
+                   }
+                },
+                "cssClasses": [
+                    "orderConfig"
+                ]
+            },
+
+            "orders.status.synchronization": {
+                "label": "Status Synchronisierung",
+                "desc": "<dl><dt>Automatische Synchronisierung per CronJob (empfohlen)</dt><dd>Die Funktion 'Automatische Synchronisierung per CronJob' &uuml;bermittelt alle 2 Stunden den aktuellen Versendet-Status zu OTTO.<br/>Dabei werden die Status-Werte aus der Datenbank gepr&uuml;ft und &uuml;bernommen, auch wenn die &Auml;nderungen durch z.B. eine Warenwirtschaft nur in der Datenbank erfolgten.<br/><br/>Sie k&ouml;nnen auch den entsprechenden Funktionsbutton 'Bestellstatus synchronisieren' oben rechts im magnalister Plugin anklicken, um den Status sofort zu &uuml;bergeben.<br/><br/>Zus&auml;tzlich k&ouml;nnen Sie den Bestellstatus-Abgleich (ab Tarif Flat - maximal viertelst&uuml;ndlich) auch durch einen eigenen CronJob ansto&szlig;en, indem Sie folgenden Link zu Ihrem Shop aufrufen: <br/><br/><i>http://www.IhrShop.de/magnaCallback.php?do=SyncOrderStatus</i><br/><br/>Eigene CronJob-Aufrufe durch Kunden, die nicht im Tarif Flat sind, oder die h&auml;ufiger als viertelst&uuml;ndlich laufen, werden geblockt.<br /></dd></dl>",
+                "key": "_#_platform_#_.orders.status.synchronization",
+                "type": "selection",
+                "values": {
+                    "auto": "Automatische Synchronisierung per CronJob (empfohlen)",
+                    "no": "Keine Synchronisierung"
+                },
+                "cssClasses": [
+                    "orderConfig"
+                ]
+            },
+
+          "carrier.key.values":{
+             "key":"carrier.key.values._#_platform_#_",
+             "type":"hidden"
+          },
+
+         "send.carrier":{
+            "label":"Versanddienstleister f&uuml;r versendete Bestellungen",
+            "desc": "OTTO l&auml;sst nur bestimmte Versanddienstleister zu.<br>Bitte achten Sie darauf, dass Sie nur g&uuml;ltige Daten angeben.",
+            "key":"_#_platform_#_.send.carrier",
+            "type":"selection",
+            "values":null,
+            "cssClasses": [
+                "orderConfig"
+            ]
+         },
+         "send.carrier.DBMatch":{
+            "label":"Versanddienstleister Datenbank-Matching",
+            "key":"_#_platform_#_.send.carrier.DBMatching.table",
+            "type":"dbfieldselector",
+            "morefields":{
+               "alias":{
+                  "label":"<span class=\"tt\">`orders_id`<\/span> Alias",
+                  "key":"_#_platform_#_.send.carrier.DBMatching.alias",
+                  "type":"text",
+                  "cssClasses":[
+                     "autoWidth"
+                  ]
+               }
+            },
+             "cssClasses": [
+                 "orderConfig"
+             ]
+         },
+         "send.carrier.ottoToShopMatch":{
+            "label":"Versanddienstleister Shop-Matching",
+            "key":"_#_platform_#_.send.carrier.ottoToShopMatching",
+            "type":"duplicate",
+            "skipRadio": "true",
+            "subtype":"extern",
+            "procFunc":"OttoConfigure::OttoCarrierOttoToShopMatchConfig",
+            "params":{
+               "subfields":{
+                  "otto.carriers":{
+                     "key":"_#_platform_#_.send.carrier.ottoToShopMatching._#_platform_#_",
+                     "type":"extern",
+                     "procFunc":"OttoConfigure::OttoCarriersConfig",
+                     "params":[
+                        "CarrierCodes",
+                        "standard"
+                     ],
+                     "cssClasses":[
+                        "autoWidth"
+                     ]
+                  },
+                  "shop.carriers":{
+                     "key":"_#_platform_#_.send.carrier.ottoToShopMatching.shop",
+                     "type":"extern",
+                     "procFunc":"OttoConfigure::OttoShopCarriersConfig",
+                     "params":[
+                        "ShopCarriers"
+                     ],
+                     "cssClasses":[
+                        "autoWidth"
+                     ]
+                  }
+               }
+            },
+             "cssClasses": [
+                 "orderConfig"
+             ]
+         },
+            "orders.tracking.key": {
+                "label": "Sendungsnummer",
+                "desc": "W&auml;hlen Sie hier aus der Datenbank die Tabelle und Spalte aus, in welcher Sie Ihre Sendungsnummer f&uuml;r jede Bestellung hinterlegen.<br><span style='color: red'>Hinweis: Die Angabe der Sendungsnummer ist f&uuml;r die Versandbest&auml;tigung bei OTTO verpflichtend!</span>",
+                "key": "_#_platform_#_.orders.tracking.key.DBMatching.table",
+                "type": "dbfieldselector",
+                "expertsetting": true,
+                "morefields":{
+                   "alias":{
+                      "label":"<span class=\"tt\">`orders_id`<\/span> Alias",
+                      "key":"_#_platform_#_.orders.tracking.key.DBMatching.alias",
+                      "type":"text",
+                      "cssClasses":[
+                         "autoWidth"
+                      ]
+                   }
+                },
+                "cssClasses": [
+                    "orderConfig"
+                ]
+            },
+          "forwarding.carrier":{
+             "label":"Versanddienstleister (Spedition) f&uuml;r versendete Bestellungen",
+             "desc": "OTTO l&auml;sst nur bestimmte Versanddienstleister zu.<br>Bitte achten Sie darauf, dass Sie nur g&uuml;ltige Daten angeben.",
+             "key":"_#_platform_#_.forwarding.carrier",
+             "type":"selection",
+             "values":null,
+             "cssClasses": [
+                 "orderConfig"
+             ]
+          },
+          "forwarding.carrier.DBMatch":{
+             "label":"Speditionsunternehmen Datenbank-Matching",
+             "key":"_#_platform_#_.forwarding.carrier.DBMatching.table",
+             "type":"dbfieldselector",
+             "morefields":{
+                "alias":{
+                   "label":"<span class=\"tt\">`orders_id`<\/span> Alias",
+                   "key":"_#_platform_#_.forwarding.carrier.DBMatching.alias",
+                   "type":"text",
+                   "cssClasses":[
+                      "autoWidth"
+                   ]
+                }
+             },
+              "cssClasses": [
+                  "orderConfig"
+              ]
+          },
+          "forwarding.carrier.ottoToShopMatch":{
+             "label":"Speditionsunternehmen Shop-Matching",
+             "key":"_#_platform_#_.forwarding.carrier.ottoToShopMatching",
+             "type":"duplicate",
+             "skipRadio": "true",
+             "subtype":"extern",
+             "procFunc":"OttoConfigure::OttoCarrierOttoToShopMatchConfig",
+             "params":{
+                "subfields":{
+                   "otto.carriers":{
+                      "key":"_#_platform_#_.forwarding.carrier.ottoToShopMatching._#_platform_#_",
+                      "type":"extern",
+                      "procFunc":"OttoConfigure::OttoCarriersConfig",
+                      "params":[
+                         "CarrierCodes",
+                         "forwarding"
+                      ],
+                      "cssClasses":[
+                         "autoWidth"
+                      ]
+                   },
+                   "shop.carriers":{
+                      "key":"_#_platform_#_.forwarding.carrier.ottoToShopMatching.shop",
+                      "type":"extern",
+                      "procFunc":"OttoConfigure::OttoShopCarriersConfig",
+                      "params":[
+                         "ShopCarriers"
+                      ],
+                      "cssClasses":[
+                         "autoWidth"
+                      ]
+                   }
+                }
+             },
+              "cssClasses": [
+                  "orderConfig"
+              ]
+          },
+
+            "orders.shipping.address": {
+                "label": "Best&auml;tigen Sie die Versand- und Absenderadresse mit",
+                "desc": "Best&auml;tigen Sie den Versand mit den Webshop-Status und das Lager oder den Ort, von dem die Sendung zur endg&uuml;ltigen Zustellung Versand wird.",
+                "key": "_#_platform_#_.orders.shipping.address",
+                "type": "duplicate",
+                "skipRadio": "true",
+                "subtype": "extern",
+                "procFunc": "OttoConfigure::ottoShippingAddress",
+                "params": {
+                    "subfields": {
+                        "status": {
+                            "label": "Webshop-Bestellstatus:",
+                            "key": "_#_platform_#_.shipping.status",
+                            "type": "selection",
+                            "values": {},
+                            "cssClasses": [
+                                "autoWidth"
+                            ]
+                        },
+                        "city": {
+                            "label": "Stadt",
+                            "key": "_#_platform_#_.orders.shipping.address.city",
+                            "type": "text",
+                            "cssClasses": [
+                                "autoWidth"
+                            ]
+                        },
+                        "countrycode": {
+                            "label": "Land",
+                            "key": "_#_platform_#_.orders.shipping.address.countrycode",
+                            "type": "selection",
+                            "values": {},
+                            "cssClasses": [
+                                "autoWidth"
+                            ]
+                        },
+                        "zip": {
+                            "label": "Postleitzahl",
+                            "key": "_#_platform_#_.orders.shipping.address.zip",
+                            "type": "text",
+                            "cssClasses": [
+                                "autoWidth"
+                            ]
+                        }
+                    }
+                },
+                "cssClasses": [
+                    "orderConfig"
+                ]
+            },
+
+              "return.carrier":{
+                 "label":"Versanddienstleister des Retourenschein",
+                 "desc": "OTTO l&auml;sst nur bestimmte Versanddienstleister zu.<br>Bitte achten Sie darauf, dass Sie nur g&uuml;ltige Daten angeben.",
+                 "key":"_#_platform_#_.return.carrier",
+                 "type":"selection",
+                 "values":null,
+                  "cssClasses": [
+                      "orderConfig"
+                  ]
+              },
+              "return.carrier.DBMatch":{
+                 "label":"Versanddienstleister des Retourenschein Datenbank-Matching",
+                 "key":"_#_platform_#_.return.carrier.DBMatching.table",
+                 "type":"dbfieldselector",
+                 "morefields":{
+                    "alias":{
+                       "label":"<span class=\"tt\">`orders_id`<\/span> Alias",
+                       "key":"_#_platform_#_.return.carrier.DBMatching.alias",
+                       "type":"text",
+                       "cssClasses":[
+                          "autoWidth"
+                       ]
+                    }
+                 },
+                  "cssClasses": [
+                      "orderConfig"
+                  ]
+              },
+              "return.carrier.ottoToShopMatch":{
+                 "label":"Versanddienstleister des Retourenschein Shop-Matching",
+                 "key":"_#_platform_#_.return.carrier.ottoToShopMatching",
+                 "type":"duplicate",
+                 "skipRadio": "true",
+                 "subtype":"extern",
+                 "procFunc":"OttoConfigure::OttoCarrierOttoToShopMatchConfig",
+                 "params":{
+                    "subfields":{
+                       "otto.carriers":{
+                          "key":"_#_platform_#_.return.carrier.ottoToShopMatching._#_platform_#_",
+                          "type":"extern",
+                          "procFunc":"OttoConfigure::OttoCarriersConfig",
+                          "params":[
+                             "CarrierCodes",
+                             "return"
+                          ],
+                          "cssClasses":[
+                             "autoWidth"
+                          ]
+                       },
+                       "shop.carriers":{
+                          "key":"_#_platform_#_.return.carrier.ottoToShopMatching.shop",
+                          "type":"extern",
+                          "procFunc":"OttoConfigure::OttoShopCarriersConfig",
+                          "params":[
+                             "ShopCarriers"
+                          ],
+                          "cssClasses":[
+                             "autoWidth"
+                          ]
+                       }
+                    }
+                 },
+                  "cssClasses": [
+                      "orderConfig"
+                  ]
+                },
+
+                "orders.return.tracking.key": {
+                    "label": "Retouren-Sendungsnummer des Retourenschein",
+                    "desc": "W&auml;hlen Sie hier aus der Datenbank die Tabelle und Spalte aus, in welcher Sie Ihre Retourensendungsnummer f&uuml;r jede Bestellung hinterlegen.<br><span style='color: red'>Hinweis: Die Angabe der Retouren-Sendungsnummer ist f&uuml;r die Versandbest&auml;tigung bei OTTO verpflichtend!</span>",
+                    "key": "_#_platform_#_.orders.return.tracking.key.DBMatching.table",
+                    "type": "dbfieldselector",
+                    "morefields":{
+                       "alias":{
+                            "label":"<span class=\"tt\">`orders_id`<\/span> Alias",
+                            "key":"_#_platform_#_.orders.return.tracking.key.DBMatching.alias",
+                            "type":"text",
+                            "cssClasses":[
+                                "autoWidth"
+                            ]
+                       }
+                    },
+                    "cssClasses": [
+                        "orderConfig"
+                    ]
+                },
+
+            "orders.cancel.with": {
+                "label": "Bestellung stornieren mit",
+                "desc": "W&auml;hlen Sie hier den Shop-Status, der zu OTTO automatisch den Status 'Bestellung storniert' &uuml;bermitteln soll.<br /><br /><strong>Hinweis:</strong> Teilstorno ist hier&uuml;ber nicht m&ouml;glich. Die gesamte Bestellung wird &uuml;ber diese Funktion storniert.",
+                "key": "_#_platform_#_.orders.cancel.with",
+                "type": "selection",
+                "values": {
+
+                },
+                "cssClasses": [
+                    "orderConfig"
+                ]
+            },
+             "blacklistemailaddress": {
+                 "label": "Blacklist E-Mail Address",
+                 "desc": "<b>Avoid Shipping Notifications to OTTO Buyers<\/b><br \/>\n                            <br \/>\n                            The option \u201cBlacklist OTTO&apos;s customer e-mail address\u201d is used to suppress e-mails that are sent from the shopping system (for orders imported via magnalister). This means that they will not reach the OTTO buyer.<br \/>\n                            <br \/>\n                            Important notes:<ul>\n                            <li>Blacklisting is deactivated by default. If activated, you will receive a mailer daemon (information from the mail server that the email could not be delivered) the moment the shopping system sends an email to the OTTO buyer.<\/li>\n                            <li>magnalister only puts the prefix \"blacklisted-\" in front of the OTTO e-mail address (e.g. blacklisted-12345@otto.de). If you still want to contact the OTTO buyer, simply remove the prefix \"blacklisted-\".<\/li>\n                            <\/ul>",
+                 "key": "_#_platform_#_.mailaddress.blacklist",
+                 "type": "checkbox",
+                 "values": {
+                     "val": "Blacklist OTTO&apos;s customer e-mail address"
+                 },
+                 "default": {
+                     "val": false
+                 }
+             }
+        }
+    }
+}
