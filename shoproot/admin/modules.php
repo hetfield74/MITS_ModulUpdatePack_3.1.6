@@ -30,12 +30,6 @@
     'easyinvoice',
     'eustandardtransfer',
     'moneyorder',
-    'paypalcart',
-    'paypalplus',
-    'paypalpluslink',
-    'paypalclassic',
-    'paypallink',
-    'paypalinstallment',
     'paypal',
     'paypalacdc',
     'paypalpui',
@@ -48,18 +42,16 @@
 
     'paypalapplepay',
     'paypalgooglepay',
-    'paypalsofort',
     'paypaltrustly',
     'paypalprzelewy',
     'paypalmybank',
     'paypalideal',
-    'paypalgiropay',
     'paypaleps',
     'paypalblik',
     'paypalbancontact',
   );
   
-  //Eingefügt um Fehler in CC Modul zu unterdrücken.
+  //Eingef?gt um Fehler in CC Modul zu unterdr?cken.
   require(DIR_FS_CATALOG.DIR_WS_CLASSES . 'xtcPrice.php');
   $xtPrice = new xtcPrice($_SESSION['currency'],'');
   $module_directory = '';
