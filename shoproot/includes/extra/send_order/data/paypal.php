@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: paypal.php 15236 2023-06-14 06:51:22Z GTB $
+   $Id: paypal.php 16701 2025-12-10 13:39:00Z GTB $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -32,12 +32,9 @@ if (is_object($order) && in_array($order->info['payment_method'], $paypal_paymen
   }
 
   if (strpos($order->info['payment_method'], 'link') !== false) {
-    if (!isset($payment_modules) || !is_object($payment_modules)) {
-      require_once (DIR_FS_CATALOG.'includes/classes/payment.php');
-      $payment_modules = new payment($order->info['payment_class']);
-    }
+    require_once (DIR_FS_CATALOG.'includes/classes/payment.php');
     $paypal_payment_info = array(
-      array ('title' => method_exists($payment_modules, 'payment_title') ? $payment_modules::payment_title($order->info['payment_method'], $order->info['order_id']) : strip_tags($paypal->title).': ', // Fallback for shop version <= 2.0.4.2
+      array ('title' => (method_exists('payment', 'payment_title')) ? payment::payment_title($order->info['payment_method'], $order->info['order_id'], $order->info['language']) : strip_tags($paypal->title).': ', // Fallback for shop version <= 2.0.4.2
              'class' => $paypal->code,
              'fields' => array(array('title' => '',
                                      'field' => sprintf(constant('MODULE_PAYMENT_'.strtoupper($paypal->code).'_TEXT_SUCCESS'), $paypal->create_paypal_link($order->info['order_id'])),
@@ -54,7 +51,7 @@ if (is_object($order) && in_array($order->info['payment_method'], $paypal_paymen
     }
     $paypal_smarty->caching = 0;
     $paypal_smarty->assign('PAYMENT_INFO', $paypal_payment_info);
-    $paypal_smarty->assign('language', $_SESSION['language']);
+    $paypal_smarty->assign('language', $order->info['language']);
     $payment_info_content = $paypal_smarty->fetch($tpl_file);
 
     $smarty->assign('PAYMENT_INFO_HTML', $payment_info_content);
@@ -72,7 +69,7 @@ if (is_object($order) && in_array($order->info['payment_method'], $paypal_paymen
       }
       $paypal_smarty->caching = 0;
       $paypal_smarty->assign('PAYMENT_INFO', $paypal_payment_info);
-      $paypal_smarty->assign('language', $_SESSION['language']);
+      $paypal_smarty->assign('language', $order->info['language']);
       
       $payment_info_content = $paypal_smarty->fetch($tpl_file);
   
